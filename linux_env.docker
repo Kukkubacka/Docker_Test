@@ -1,0 +1,42 @@
+# Pull base image.
+FROM ubuntu:16.04
+
+# Install.
+RUN apt-get update
+RUN apt-get install -y python2.7
+RUN apt-get install -y python-pip
+RUN pip install robotframework
+RUN pip install robotframework-selenium2library
+
+
+# Create robot environment
+RUN mkdir -p /home/robot
+RUN mkdir -p /home/robot/libs
+RUN mkdir -p /home/robot/resources
+RUN mkdir -p /home/robot/tests
+RUN mkdir -p /home/robot/output
+
+RUN mkdir -p /home/robot/tmp
+ADD . /home/robot/tmp
+
+COPY /libs/Lib1.py /home/robot/libs
+COPY /libs/Lib2.py /home/robot/libs
+
+COPY /resources/ELocators.robot /home/robot/resources
+COPY /resources/Config.robot /home/robot/resources
+COPY /resources/keywords.robot /home/robot/resources
+
+COPY /tests/Test-Suite.robot /home/robot/tests
+
+# Define Volume
+#VOLUME C:\HOMMELIT/Docker/LVol
+
+# Make port22 (SSH) available to the world outside this container
+EXPOSE 22
+EXPOSE 23
+
+# Define environmentvariable
+ENV NAME Ubuntu
+
+# Define default command.
+CMD ["bash"]
